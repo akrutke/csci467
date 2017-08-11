@@ -1,0 +1,166 @@
+<html>
+<?php
+//Andrew Krutke Joe Lamantia
+//Group 6
+//Quote System
+
+	//CONNECT TO A DATABASE
+	$link = mysqli_connect("courses", "z1756942", "1990Dec21", "z1756942");
+
+if (!$link) {
+    echo "Error: Unable to connect to MySQL." . PHP_EOL;
+    echo "Debugging errno: " . mysqli_connect_errno() . PHP_EOL;
+    echo "Debugging error: " . mysqli_connect_error() . PHP_EOL;
+    exit;
+}
+?>
+<!--html Style Sheet for html -->
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+* {
+    box-sizing: border-box;
+}
+.row::after {
+    content: "";
+    clear: both;
+    display: block;
+}
+[class*="col-"] {
+    float: left;
+    padding: 15px;
+}
+.col-1 {width: 8.33%;}
+.col-2 {width: 16.66%;}
+.col-3 {width: 25%;}
+.col-4 {width: 33.33%;}
+.col-5 {width: 41.66%;}
+.col-6 {width: 50%;}
+.col-7 {width: 58.33%;}
+.col-8 {width: 66.66%;}
+.col-9 {width: 75%;}
+.col-10 {width: 83.33%;}
+.col-11 {width: 91.66%;}
+.col-12 {width: 100%;}
+html {
+    font-family: "Lucida Sans", sans-serif;
+}
+.header {
+    background-color: #9933cc;
+    color: #ffffff;
+    padding: 15px;
+}
+.menu ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+.menu li {
+    padding: 8px;
+    margin-bottom: 7px;
+    background-color :#33b5e5;
+    color: #ffffff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+}
+.menu li:hover {
+    background-color: #0099cc;
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+<h1>System Admin</h1>
+</div>
+
+<div class="row">
+
+<div class="col-3 menu;">
+<style = "overflow: auto;">
+table, th, td { border: 1px solid black;} </style> 
+<table>
+
+
+<?php
+//echo "<tr><th> ID </th><th> Name </th><th> Address </th><th> Commission </th><th> Password </th></tr>";
+$servername = "courses";
+$username = "z1756942";
+$password = "1990Dec21";
+$dbname = "z1756942";
+
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname);
+// Check connection
+if ($conn->connect_error) {
+     die("Connection failed: " . $conn->connect_error);
+}
+
+$sql = "SELECT * FROM SalesPerson";
+$result = $conn->query($sql);
+
+if ($result->num_rows > 0) {
+echo "<tr><th> ID </th><th> Name </th><th> Address </th><th> Commission </th><th> Password </th></tr>";
+     // output data of each row
+     while($row = $result->fetch_assoc()) {
+	echo "<tr><td>". $row["ID"]."</td><td>" . $row["Name"]."</td><td>" . $row["Address"]. "</td><td>" .$row["Commission"]. "</td><td>" .$row["Password"]. "</td></tr>";
+     }
+     echo "</table>";
+} else {
+     echo "0 results";
+}
+
+$conn->close();
+?>  
+
+</div>
+</table>
+</div>
+</div>
+
+<form action="maintainsalesperson.php" method="post">
+Search by Name: <br>
+Name: <input type="text" name="name"><br><br>
+<input type="submit" value="Search">
+</form>
+<?php
+
+//FROM JOE: You want the query set up to be run on the salesPersonSearch.php page.
+
+if(isset($_POST['submit'])){
+$subname=$_POST['name'];
+
+$servername = "courses";
+$username = "z1756942";
+$password = "1990Dec21";
+$dbname = "z1756942";
+
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname);
+// Check connection
+if ($conn->connect_error) {
+     die("Connection failed: " . $conn->connect_error);
+}
+
+$sql = "SELECT * FROM SalesPerson WHERE Name = $subname";
+$result = $conn->query($sql);
+
+
+if ($result->num_rows > 0) {
+echo "<tr><th> ID </th><th> Name </th><th> Address </th><th> Commission </th><th> Password </th></tr>";
+     // output data of each row
+     while($row = $result->fetch_assoc()) {
+         echo "<tr><td>". $row["ID"]."</td><td>" . $row["Name"]."</td><td>" . $row["Address"]. "</td><td>" .$row["Commission"]. "</td><td>" .$row["Password"]. "</td></tr>";
+     }
+     echo "</table>";
+} else {
+     echo "0 results";
+}
+ $conn->close();
+
+}
+
+?>
+
+
+</body>
+</html>
