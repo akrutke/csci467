@@ -1,0 +1,73 @@
+<html>
+    <head>
+        <h1>Edit Quote</h1>
+        <a href='SanctionQuoteGUI.php'>Return to New Quotes</a>
+    </head>
+    <body bgcolor = #dd99ff >
+        <?php
+        include("CustomerQuotesFunctions.php");
+        include("CreateQuoteControl.php");
+        if ($_POST['Update'] == "Update"){
+            runQUpdate();
+        } else {
+        editQuote();
+        }
+
+
+function editQuote(){
+    $link = dbConnect();
+    
+    $quoteID = $_POST['select'];
+    $sql = "select * from Quote where QID = $quoteID;";
+    if(!$result = mysqli_query($link, $sql)){
+        echo "<p><b>Search not executed. If you find this message in error, please contact your system administrator.</b></p>";
+    } else {
+
+    $row = mysqli_fetch_array($result);
+
+    echo "<form method = 'post' action = 'CustomerQuotesEdit.php'>";
+    echo "<input type = 'hidden' name = 'quoteID' value = $quoteID>";
+    echo "<table>";
+        echo "<tr>";
+            echo "<td>Line Items:</td>";
+            echo "<td>", ($row[3]), "</td>";
+            echo "<td><textarea row='4' cols = '22' name = 'lineItemTxt'></textarea></td>";
+        echo"</tr>";
+        echo "<tr>";
+            echo "<td>Secrect Note:</td>";
+            echo "<td>",($row[4]),"</td>";
+            echo "<td><input type = 'text' name = 'Note'></td>";
+        echo "</tr>";
+        echo "<tr>";
+            echo "<td>Price: </td>";
+            echo "<td>",($row[1]),"</td>";
+            echo "<td><input type = 'text' name = 'Price'></td>";
+        echo "</tr>";
+        echo "<tr>";
+            echo "<td>Discounts: </td>";
+            echo "<td>", ($row[2]), "</td>";
+            echo "<td><input type = 'text' name = 'Discounts'></td>";
+        echo "</tr>";
+        echo "<tr>";
+            echo "<td>Sanctioned: </td>";
+            if ($row[5] == 1){
+            echo "<td> Yes </td>";
+            }
+            else {
+            echo "<td> No </td>";
+            }
+            echo "<td><input type = 'checkbox' name = 'Sanctioned'></td>";
+        echo "</tr>";
+    echo "</table>";
+    echo "<table>";
+        echo "<tr>";
+            echo "<td><input type = 'submit' name = 'Update' value = 'Update'></td>";
+        echo "</tr>";
+    echo "</table>";
+    echo "</form>";
+    }
+}
+
+        ?>
+    </body>
+</html>
